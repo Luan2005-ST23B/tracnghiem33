@@ -2,18 +2,81 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- quan trọng cho mobile -->
   <title>工業計測クイズ</title>
   <style>
-    body {font-family: Arial, sans-serif; margin: 20px;}
-    h1 {text-align: center;}
-    .question {margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 8px;}
-    .correct-answer {background-color: #c8f7c5; padding: 2px 6px; border-radius: 4px;}
-    .incorrect-answer {background-color: #f7c5c5; padding: 2px 6px; border-radius: 4px;}
-    .btn-group {margin-top: 20px; text-align: center;}
-    button {padding: 10px 20px; margin: 5px; border: none; border-radius: 8px; cursor: pointer;}
+    body {
+      font-family: Arial, sans-serif;
+      margin: 10px;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      text-align: center;
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+    }
+    .question {
+      margin-bottom: 12px;
+      padding: 12px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .question p {
+      margin-bottom: 8px;
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+    label {
+      display: block;
+      margin: 6px 0;
+      font-size: 1rem;
+    }
+    input[type="radio"] {
+      transform: scale(1.3); /* radio to hơn cho dễ chạm */
+      margin-right: 8px;
+    }
+    .correct-answer {
+      background-color: #d4f8d4;
+      border-radius: 4px;
+      padding: 2px 6px;
+    }
+    .incorrect-answer {
+      background-color: #f8d4d4;
+      border-radius: 4px;
+      padding: 2px 6px;
+    }
+    .btn-group {
+      margin-top: 20px;
+      text-align: center;
+    }
+    button {
+      padding: 12px 20px;
+      margin: 6px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      width: 100%;
+      max-width: 250px;
+    }
     #submitBtn {background-color: #007bff; color: #fff;}
     #restartBtn {background-color: #28a745; color: #fff;}
-    #score {font-size: 18px; font-weight: bold; text-align: center; margin-top: 20px;}
+    #score {
+      font-size: 1.2rem;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    /* Responsive cho màn nhỏ */
+    @media (max-width: 600px) {
+      h1 { font-size: 1.3rem; }
+      .question p { font-size: 0.95rem; }
+      label { font-size: 0.95rem; }
+      button { font-size: 1rem; padding: 12px; }
+    }
   </style>
 </head>
 <body>
@@ -25,7 +88,7 @@
     <button id="restartBtn" type="button" onclick="restartQuiz()" style="display:none;">🔄 Làm lại bài</button>
   </div>
 
-  <script>
+ <script>
     const questions = [
       { text: "Q1. はあつマイクロメータははぐるまのまたぎはあつのすんぽうそくていにもちいるディスクがたのそくていめんをそなえたがいそくマイクロメータである。", answer: true },
       { text: "Q2. ハイトゲージはねじのゆうこうけいのそくていにしようされる。", answer: false },
@@ -103,34 +166,33 @@
       });
     }
 
-function checkAnswers() {
-  let score = 0;
-  questions.forEach((q, i) => {
-    const selected = document.querySelector(`input[name="q${i}"]:checked`);
-    const labels = quizDiv.children[i].querySelectorAll("label");
+    function checkAnswers() {
+      let score = 0;
+      questions.forEach((q, i) => {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        const labels = quizDiv.children[i].querySelectorAll("label");
 
-    // Tô màu tất cả đáp án để chỉ ra đúng/sai
-    labels.forEach(label => {
-      const input = label.querySelector("input");
-      if (String(q.answer) === input.value) {
-        label.classList.add("correct-answer"); // đáp án đúng -> xanh
-      }
-    });
+        labels.forEach(label => {
+          const input = label.querySelector("input");
+          if (String(q.answer) === input.value) {
+            label.classList.add("correct-answer");
+          }
+        });
 
-    if (selected) {
-      if (String(q.answer) === selected.value) {
-        score++;
-      } else {
-        selected.parentElement.classList.add("incorrect-answer"); // chọn sai -> đỏ
-      }
+        if (selected) {
+          if (String(q.answer) === selected.value) {
+            score++;
+          } else {
+            selected.parentElement.classList.add("incorrect-answer");
+          }
+        }
+      });
+
+      document.getElementById("score").textContent =
+        `✅ Bạn đúng ${score}/${questions.length} câu`;
+      document.getElementById("submitBtn").style.display = "none";
+      document.getElementById("restartBtn").style.display = "inline-block";
     }
-  });
-
-  document.getElementById("score").textContent =
-    `✅ Bạn đúng ${score}/${questions.length} câu`;
-  document.getElementById("submitBtn").style.display = "none";
-  document.getElementById("restartBtn").style.display = "inline-block";
-}
 
     function restartQuiz() {
       loadQuiz();
