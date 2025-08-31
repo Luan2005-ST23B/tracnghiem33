@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>工業計測クイズ</title>
+  <style>
+    body {font-family: Arial, sans-serif; margin: 20px;}
+    h1 {text-align: center;}
+    .question {margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 8px;}
+    .correct-answer {background-color: #c8f7c5; padding: 2px 6px; border-radius: 4px;}
+    .incorrect-answer {background-color: #f7c5c5; padding: 2px 6px; border-radius: 4px;}
+    .btn-group {margin-top: 20px; text-align: center;}
+    button {padding: 10px 20px; margin: 5px; border: none; border-radius: 8px; cursor: pointer;}
+    #submitBtn {background-color: #007bff; color: #fff;}
+    #restartBtn {background-color: #28a745; color: #fff;}
+    #score {font-size: 18px; font-weight: bold; text-align: center; margin-top: 20px;}
+  </style>
+</head>
+<body>
+  <h1>工業計測クイズ</h1>
+  <div id="quiz"></div>
+  <div id="score"></div>
+  <div class="btn-group">
+    <button id="submitBtn" type="button" onclick="checkAnswers()">📑 Nộp bài</button>
+    <button id="restartBtn" type="button" onclick="restartQuiz()" style="display:none;">🔄 Làm lại bài</button>
+  </div>
+
+  <script>
+    const questions = [
+      { text: "Q1. はあつマイクロメータははぐるまのまたぎはあつのすんぽうそくていにもちいるディスクがたのそくていめんをそなえたがいそくマイクロメータである。", answer: true },
+      { text: "Q2. ハイトゲージはねじのゆうこうけいのそくていにしようされる。", answer: false },
+      { text: "Q3. JISによればブロックゲージの等級にはK級,0級,1級,2級の4つがある。", answer: true },
+      { text: "Q4. マイクロメータは比較測定器である。", answer: false },
+      { text: "Q5. かたよりとはそくていちのぼへいきんからしんのあたいをひいたあたいである。", answer: true },
+      { text: "Q6. 図面で半径を表すには寸法数字の前にRを付記する。", answer: true },
+      { text: "Q7. 二つの特性を横軸と縦軸とし観測点を打点した図を散布図という。", answer: true },
+      { text: "Q8. ねじのピッチは軸方向の1回転の進み量である。", answer: false },
+      { text: "Q9. 電圧の単位はHz（ヘルツ）で表す。", answer: false },
+      { text: "Q10. 外側マイクロメータはアッベの原理を満足していない計器である。", answer: false },
+      { text: "Q11. 機械加工部品を正確に測定するために測定器と比較物は温度慣らしが必要である。", answer: true },
+      { text: "Q12. 特定の結果と原因の関係を系統的に表した図を特性要因図という。", answer: true },
+      { text: "Q13. 系統誤差は補正できるが偶然誤差は補正できない。", answer: true },
+      { text: "Q14. 抜取検査とはロット中のすべての検査品について行う検査である。", answer: false },
+      { text: "Q15. 視差とは視線の方向によって生じる誤差である。", answer: true },
+      { text: "Q16. シリンダーゲージは比較測定器である。", answer: true },
+      { text: "Q17. 例題の数値: 実寸法は30.21mmである。", answer: false },
+      { text: "Q18. 受入検査は提出されたロットを受け入れてよいか判定する検査である。", answer: true },
+      { text: "Q19. 亜鉛めっきは錆に対して防錆力がある。", answer: true },
+      { text: "Q20. 安全衛生活動における5Sは整理整頓清掃清潔躾である。", answer: false },
+      { text: "Q21. 外側マイクロメータで部品を測定する場合フレームが膨張していると実寸法より大きく測定される。", answer: false },
+      { text: "Q22. シリンダーゲージは内径測定器でダイヤルゲージを用いて使用する。", answer: true },
+      { text: "Q23. JISによるとVブロックのV面の角度は60°と90°の2種類が規定されている。", answer: false },
+      { text: "Q24. ねじの表示でM2はインチサイズのねじを表す。", answer: false },
+      { text: "Q25. JISにおける図面の表示方法としてコイルねじは無荷重の状態で描く。", answer: true },
+      { text: "Q26. 焼なましの目的は内部応力除去である。", answer: true },
+      { text: "Q27. JISによれば非常停止器のアクチュエータは赤色でなければならない。", answer: true },
+      { text: "Q28. JISによれば寸法公差とは平均値と最小値との差である。", answer: false },
+      { text: "Q29. ヒストグラムは度数分布表などをもとに作られる。", answer: true },
+      { text: "Q30. タップはめねじを立てる工具である。", answer: true },
+      { text: "Q31. ノギスのデプスバーは内径を測定するときに使う。", answer: false },
+      { text: "Q32. 人命に関わる場合は全数検査を行うことが多い。", answer: true },
+      { text: "Q33. トースカンは罫書き作業に用いられる。", answer: true },
+      { text: "Q34. 両端の面間距離で規定の寸法を表す長さの標準器を端度器という。", answer: true },
+      { text: "Q35. 散布図は2種類のデータの関係を図にしたもの。", answer: true },
+      { text: "Q36. JISの材料記号によればSUSはステンレス鋼を表す。", answer: true },
+      { text: "Q37. 誤差とは観測値-真の値である。", answer: true },
+      { text: "Q38. 外側マイクロメータの性能は測定面の平行度誤差、スピンドル送り誤差、測定力などである。", answer: true },
+      { text: "Q39. メートルねじのねじ山角度は60°である。", answer: true },
+      { text: "Q40. 電圧は磁石でもとめられる。", answer: false },
+      { text: "Q41. マイクロメータのラチェットストップは測定圧を一定にするためのものである。", answer: true },
+      { text: "Q42. JISによればVブロックの種類は鋼製、鋳鉄製、石製の3種類がある。", answer: false },
+      { text: "Q43. 製図法でS50は球の直径50mmを表す。", answer: true },
+      { text: "Q44. 右ねじと左ねじのうち一般的に使用されるのは左ねじである。", answer: false },
+      { text: "Q45. アルミニウムは銅より熱膨張係数が小さい。", answer: false },
+      { text: "Q46. 主旨の要因により生ずる誤差のすべてを総合誤差という。", answer: true },
+      { text: "Q47. ねじが1回転したときの軸方向進み量をリードという。", answer: true },
+      { text: "Q48. 複数のブロックゲージを密着させることをリンキングという。", answer: true },
+      { text: "Q49. JISによれば精密定盤には鋳鉄製と石製がある。", answer: true },
+      { text: "Q50. 精密測定に影響のある環境条件は温度、気圧、湿度である。", answer: true },
+      { text: "Q51. JISでは圧力の単位にrad（ラジアル）を採用している。", answer: false },
+      { text: "Q52. パレート図とは項目別に発生頻度を小さい順に並べた図である。", answer: false },
+      { text: "Q53. JISによれば疲労破壊とは材料が繰返し荷重を受けて発生した割れが進展して破壊に至る現象である。", answer: true },
+      { text: "Q54. チタンはアルミニウムより比重が小さい。", answer: false },
+      { text: "Q55. 焼入れとは金属製品を所定の高温状態から急冷する処理である。", answer: true },
+      { text: "Q56. JISによればブロックゲージ精度検査の測定環境温度は15°C〜25°Cで行うと規定されている。", answer: false },
+      { text: "Q57. 二条ねじのリードはピッチと同じである。", answer: false },
+      { text: "Q58. アルミニウムは銅より熱伝導率が高い。", answer: false }
+    ];
+
+    const quizDiv = document.getElementById("quiz");
+
+    function loadQuiz() {
+      quizDiv.innerHTML = "";
+      questions.forEach((q, i) => {
+        const div = document.createElement("div");
+        div.className = "question";
+        div.innerHTML = `
+          <p>${q.text}</p>
+          <label><input type="radio" name="q${i}" value="true"> Đúng</label>
+          <label><input type="radio" name="q${i}" value="false"> Sai</label>
+        `;
+        quizDiv.appendChild(div);
+      });
+    }
+
+function checkAnswers() {
+  let score = 0;
+  questions.forEach((q, i) => {
+    const selected = document.querySelector(`input[name="q${i}"]:checked`);
+    const labels = quizDiv.children[i].querySelectorAll("label");
+
+    // Tô màu tất cả đáp án để chỉ ra đúng/sai
+    labels.forEach(label => {
+      const input = label.querySelector("input");
+      if (String(q.answer) === input.value) {
+        label.classList.add("correct-answer"); // đáp án đúng -> xanh
+      }
+    });
+
+    if (selected) {
+      if (String(q.answer) === selected.value) {
+        score++;
+      } else {
+        selected.parentElement.classList.add("incorrect-answer"); // chọn sai -> đỏ
+      }
+    }
+  });
+
+  document.getElementById("score").textContent =
+    `✅ Bạn đúng ${score}/${questions.length} câu`;
+  document.getElementById("submitBtn").style.display = "none";
+  document.getElementById("restartBtn").style.display = "inline-block";
+}
+
+    function restartQuiz() {
+      loadQuiz();
+      document.getElementById("score").textContent = "";
+      document.getElementById("submitBtn").style.display = "inline-block";
+      document.getElementById("restartBtn").style.display = "none";
+    }
+
+    loadQuiz();
+  </script>
+</body>
+</html>
