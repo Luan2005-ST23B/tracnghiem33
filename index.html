@@ -4,38 +4,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- quan trọng cho mobile -->
   <title>工業計測クイズ</title>
-  <style>
+ <style>
     body {
       font-family: Arial, sans-serif;
       margin: 10px;
       background-color: #f9f9f9;
+      font-size: 18px; /* chữ mặc định to hơn */
     }
     h1 {
       text-align: center;
-      font-size: 1.5rem;
-      margin-bottom: 15px;
+      font-size: 2rem; /* to hơn */
+      margin-bottom: 20px;
     }
     .question {
-      margin-bottom: 12px;
-      padding: 12px;
+      margin-bottom: 16px;
+      padding: 16px;
       background: #fff;
       border: 1px solid #ddd;
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
     .question p {
-      margin-bottom: 8px;
-      font-size: 1rem;
-      line-height: 1.4;
+      margin-bottom: 10px;
+      font-size: 1.2rem; /* câu hỏi to hơn */
+      line-height: 1.6;
     }
     label {
       display: block;
-      margin: 6px 0;
-      font-size: 1rem;
+      margin: 8px 0;
+      font-size: 1.1rem; /* chữ đáp án to hơn */
     }
     input[type="radio"] {
-      transform: scale(1.3); /* radio to hơn cho dễ chạm */
-      margin-right: 8px;
+      transform: scale(1.5); /* radio lớn hơn */
+      margin-right: 10px;
     }
     .correct-answer {
       background-color: #d4f8d4;
@@ -52,30 +53,30 @@
       text-align: center;
     }
     button {
-      padding: 12px 20px;
-      margin: 6px;
+      padding: 14px 20px;
+      margin: 8px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 1.2rem; /* chữ nút to hơn */
       width: 100%;
-      max-width: 250px;
+      max-width: 300px;
     }
     #submitBtn {background-color: #007bff; color: #fff;}
     #restartBtn {background-color: #28a745; color: #fff;}
     #score {
-      font-size: 1.2rem;
+      font-size: 1.4rem; /* kết quả nổi bật hơn */
       font-weight: bold;
       text-align: center;
-      margin-top: 15px;
+      margin-top: 18px;
     }
 
-    /* Responsive cho màn nhỏ */
+    /* Responsive */
     @media (max-width: 600px) {
-      h1 { font-size: 1.3rem; }
-      .question p { font-size: 0.95rem; }
-      label { font-size: 0.95rem; }
-      button { font-size: 1rem; padding: 12px; }
+      h1 { font-size: 1.6rem; }
+      .question p { font-size: 1.1rem; }
+      label { font-size: 1rem; }
+      button { font-size: 1.1rem; padding: 14px; }
     }
   </style>
 </head>
