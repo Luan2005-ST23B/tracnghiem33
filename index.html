@@ -154,56 +154,67 @@
 
     const quizDiv = document.getElementById("quiz");
 
-    function loadQuiz() {
-      quizDiv.innerHTML = "";
-      questions.forEach((q, i) => {
-        const div = document.createElement("div");
-        div.className = "question";
-        div.innerHTML = `
-          <p>${q.text}</p>
-          <label><input type="radio" name="q${i}" value="true"> Đúng</label>
-          <label><input type="radio" name="q${i}" value="false"> Sai</label>
-        `;
-        quizDiv.appendChild(div);
-      });
+ function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
     }
+    return array;
+  }
 
-    function checkAnswers() {
-      let score = 0;
-      questions.forEach((q, i) => {
-        const selected = document.querySelector(`input[name="q${i}"]:checked`);
-        const labels = quizDiv.children[i].querySelectorAll("label");
+  function loadQuiz() {
+    quizDiv.innerHTML = "";
+    questions.forEach((q, i) => {
+      const div = document.createElement("div");
+      div.className = "question";
+      div.innerHTML = `
+        <p>${q.text}</p>
+        <label><input type="radio" name="q${i}" value="true"> Đúng</label>
+        <label><input type="radio" name="q${i}" value="false"> Sai</label>
+      `;
+      quizDiv.appendChild(div);
+    });
+  }
 
-        labels.forEach(label => {
-          const input = label.querySelector("input");
-          if (String(q.answer) === input.value) {
-            label.classList.add("correct-answer");
-          }
-        });
+  function checkAnswers() {
+    let score = 0;
+    questions.forEach((q, i) => {
+      const selected = document.querySelector(`input[name="q${i}"]:checked`);
+      const labels = quizDiv.children[i].querySelectorAll("label");
 
-        if (selected) {
-          if (String(q.answer) === selected.value) {
-            score++;
-          } else {
-            selected.parentElement.classList.add("incorrect-answer");
-          }
+      labels.forEach(label => {
+        const input = label.querySelector("input");
+        if (String(q.answer) === input.value) {
+          label.classList.add("correct-answer");
         }
       });
 
-      document.getElementById("score").textContent =
-        `✅ Bạn đúng ${score}/${questions.length} câu`;
-      document.getElementById("submitBtn").style.display = "none";
-      document.getElementById("restartBtn").style.display = "inline-block";
-    }
+      if (selected) {
+        if (String(q.answer) === selected.value) {
+          score++;
+        } else {
+          selected.parentElement.classList.add("incorrect-answer");
+        }
+      }
+    });
 
-    function restartQuiz() {
-      loadQuiz();
-      document.getElementById("score").textContent = "";
-      document.getElementById("submitBtn").style.display = "inline-block";
-      document.getElementById("restartBtn").style.display = "none";
-    }
+    document.getElementById("score").textContent =
+      `✅ Bạn đúng ${score}/${questions.length} câu`;
+    document.getElementById("submitBtn").style.display = "none";
+    document.getElementById("restartBtn").style.display = "inline-block";
+  }
 
+  function restartQuiz() {
+    shuffle(questions);   // 👉 Xáo trộn câu hỏi khi làm lại
     loadQuiz();
+    document.getElementById("score").textContent = "";
+    document.getElementById("submitBtn").style.display = "inline-block";
+    document.getElementById("restartBtn").style.display = "none";
+  }
+
+  shuffle(questions); // 👉 Lần đầu cũng random
+  loadQuiz();
+</script>
   </script>
 </body>
 </html>
